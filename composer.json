@@ -1,0 +1,21 @@
+{
+    "name": "guhemama/correios_api",
+    "description": "Correios (Brazilian Postal Service) webservices wrapper",
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "Gustavo Henrique Mascarenhas Machado",
+            "email": "guhemama@gmail.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "~5.0"
+    },
+     "require-dev": {
+        "phpspec/phpspec": "~2.0"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "autoload": { "psr-0": { "": "src" } }
+}
