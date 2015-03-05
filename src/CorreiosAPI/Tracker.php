@@ -119,7 +119,10 @@ class Tracker
    */
   protected function trackOne($trackingNumber)
   {
+    $trackingNumber = strtoupper($trackingNumber);
+
     $this->validTrackingNumber($trackingNumber);
+
     return $this->queryAPI($trackingNumber, self::FETCH_SINGLE);
   }
 
@@ -137,6 +140,9 @@ class Tracker
 
     // Sort the tracking numbers - they must be in ascending order
     sort($trackingNumbers);
+
+    // Uppercase everything
+    $trackingNumbers = array_change_key_case($trackingNumbers, CASE_UPPER);
 
     return $this->queryAPI(implode('', $trackingNumbers), self::FETCH_INTERVAL);
   }
