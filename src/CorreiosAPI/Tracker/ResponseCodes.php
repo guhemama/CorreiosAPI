@@ -135,10 +135,7 @@ class ResponseCodes
     , 'PMT' => [
           1 => 'Partiu em meio de transporte'
       ]
-    , 'PO'  => [
-          0 => 'Postado'
-        , 9 => 'Postado'
-      ]
+    , 'PO'  => 'Postado'
     , 'RO'  => [
           1  => 'Encaminhado'
         , 99 => 'Encaminhado (estornado)'
@@ -159,9 +156,14 @@ class ResponseCodes
     $code   = strval($code);
     $status = intval($status);
 
-    if (isset(self::$responseCodes[$code]) && isset(self::$responseCodes[$code][$status]))
+    if (array_key_exists($code, self::$responseCodes))
     {
-      return self::$responseCodes[$code][$status];
+      if (is_array(self::$responseCodes[$code]) && array_key_exists($status, self::$responseCodes[$code]))
+      {
+        return self::$responseCodes[$code][$status];
+      }
+
+      return self::$responseCodes[$code];
     }
 
     if (isset(self::$responseCodes[$status]))
