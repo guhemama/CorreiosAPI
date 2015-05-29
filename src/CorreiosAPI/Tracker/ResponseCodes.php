@@ -124,11 +124,7 @@ class ResponseCodes
     , 'IT'  => [
           1 => 'Passagem interna'
       ]
-    , 'LDI' => [
-          1 => 'Aguardando retirada'
-        , 2 => 'Caixa postal'
-        , 8 => 'Fiscalização'
-      ]
+    , 'LDI' => 'Aguardando retirada/Caixa postal'
     , 'OEC' => [
           1 => 'Saiu para entrega'
       ]
@@ -158,14 +154,22 @@ class ResponseCodes
 
     if (array_key_exists($code, self::$responseCodes))
     {
+      // Returns $responseCodes[$code][$status]
       if (is_array(self::$responseCodes[$code]) && array_key_exists($status, self::$responseCodes[$code]))
       {
         return self::$responseCodes[$code][$status];
       }
 
+      // Returns $responseCodes[$code] if it's a string, otherwise implodes it and returns
+      if (is_array(self::$responseCodes[$code]))
+      {
+        return implode(' - ', self::$responseCodes[$code]);
+      }
+
       return self::$responseCodes[$code];
     }
 
+    // Returns by status if there is no code
     if (isset(self::$responseCodes[$status]))
     {
       return self::$responseCodes[$status];
