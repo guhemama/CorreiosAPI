@@ -85,27 +85,13 @@ class ResponseCodes
     , 51 => 'Roubo a veículo'
     , 52 => 'Roubo a unidade'
     , 69 => 'Extraviado'
-    , 'CAR' => [
-          1 => 'Conferido'
-      ]
-    , 'CD'  => [
-          1 => 'Conferido'
-      ]
-    , 'CMR' => [
-          1 => 'Conferido'
-      ]
-    , 'CO'  => [
-          1 => 'Conferido'
-      ]
-    , 'CUN' => [
-          1 => 'Conferido'
-      ]
-    , 'DO'  => [
-          1 => 'Encaminhado'
-      ]
-    , 'EST' => [
-          1 => 'Estornado'
-      ]
+    , 'CAR' => 'Conferido'
+    , 'CD'  => 'Conferido'
+    , 'CMR' => 'Conferido'
+    , 'CO'  => 'Conferido'
+    , 'CUN' => 'Conferido'
+    , 'DO'  => 'Encaminhado'
+    , 'EST' => 'Estornado'
     , 'FC'  => [
           1 => 'Devolvido a pedido do cliente'
         , 2 => 'Com entrega agendada'
@@ -115,30 +101,22 @@ class ResponseCodes
         , 6 => 'Restrição lançamento externo'
         , 7 => 'Empresa sem expediente'
       ]
-    , 'IDC' => [
-          1 => 'Indenizado'
+    , 'IDC' => 'Indenizado'
+    , 'IE'  => 'Irregularidade na expedição'
+    , 'IT'  => 'Passagem interna'
+    , 'LDI' => [
+          1 => 'Aguardando retirada'
+        , 2 => 'Caixa postal'
+        , 8 => 'Fiscalização'
       ]
-    , 'IE'  => [
-          1 => 'Irregularidade na expedição'
-      ]
-    , 'IT'  => [
-          1 => 'Passagem interna'
-      ]
-    , 'LDI' => 'Aguardando retirada/Caixa postal'
-    , 'OEC' => [
-          1 => 'Saiu para entrega'
-      ]
-    , 'PMT' => [
-          1 => 'Partiu em meio de transporte'
-      ]
+    , 'OEC' => 'Saiu para entrega'
+    , 'PMT' => 'Partiu em meio de transporte'
     , 'PO'  => 'Postado'
     , 'RO'  => [
           1  => 'Encaminhado'
         , 99 => 'Encaminhado (estornado)'
       ]
-    , 'TR'  => [
-          1 => 'Trânsito'
-      ]
+    , 'TR'  => 'Trânsito'
   ];
 
   /**
