@@ -32,7 +32,8 @@
 
 namespace CorreiosAPI;
 
-use Exception;
+use InvalidArgumentException;
+use RuntimeException;
 use GuzzleHttp\Client as HttpClient;
 
 class Tracker
@@ -94,7 +95,7 @@ class Tracker
       return true;
     }
 
-    throw new Exception("{$trackingNumber} is not a valid tracking number in the format XX000000000YY.");
+    throw new InvalidArgumentException("{$trackingNumber} is not a valid tracking number in the format XX000000000YY.");
   }
 
   /**
@@ -163,12 +164,19 @@ class Tracker
       , 'Objetos'   => $trackingNumbers
     ];
 
-    $httpClient = new HttpClient();
-    $response = $httpClient->post(self::WEBSERVICE_URL, ['body' => $params]);
-
-    if ($response->getStatusCode() == 200)
+    try
     {
-      return $this->processResponse($response->getBody());
+      $httpClient = new HttpClient();
+      $response = $httpClient->post(self::WEBSERVICE_URL, ['body' => $params]);
+
+      if ($response->getStatusCode() == 200)
+      {
+        return $this->processResponse($response->getBody());
+      }
+    }
+    catch (Exception $e)
+    {
+      throw new RuntimeException($e->getMessage);
     }
 
     return false;
@@ -188,7 +196,7 @@ class Tracker
     {
       if (isset($xml->error))
       {
-        throw new Exception("API call error: {$xml->error}");
+        throw new RuntimeException("API call error: {$xml->error}");
       }
 
       $results = [];
