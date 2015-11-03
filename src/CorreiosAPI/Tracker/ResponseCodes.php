@@ -137,17 +137,14 @@ class ResponseCodes
     $code   = strval($code);
     $status = intval($status);
 
-    if (array_key_exists($code, self::$responseCodes))
-    {
+    if (array_key_exists($code, self::$responseCodes)) {
       // Returns $responseCodes[$code][$status]
-      if (is_array(self::$responseCodes[$code]) && array_key_exists($status, self::$responseCodes[$code]))
-      {
+      if (is_array(self::$responseCodes[$code]) && array_key_exists($status, self::$responseCodes[$code])) {
         return self::$responseCodes[$code][$status];
       }
 
       // Returns $responseCodes[$code] if it's a string, otherwise implodes it and returns
-      if (is_array(self::$responseCodes[$code]))
-      {
+      if (is_array(self::$responseCodes[$code])) {
         return implode(' - ', self::$responseCodes[$code]);
       }
 
@@ -155,8 +152,7 @@ class ResponseCodes
     }
 
     // Returns by status if there is no code
-    if (isset(self::$responseCodes[$status]))
-    {
+    if (isset(self::$responseCodes[$status])) {
       return self::$responseCodes[$status];
     }
 

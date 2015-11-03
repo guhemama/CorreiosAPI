@@ -72,6 +72,7 @@ class TrackerTest extends TestCase
   public function testApiResponseProcessingIsSuccessful()
   {
     $goodResponse = '{}';
+    $this->markTestIncomplete('Must mock HTTP request.');
   }
 
   /**
@@ -86,5 +87,7 @@ class TrackerTest extends TestCase
                        <versao>1.0</versao>
                          <error>falha na autenticao do usuio</error>
                     </sroxml>';
+
+    $this->markTestIncomplete('Must mock HTTP request.');
   }
 }

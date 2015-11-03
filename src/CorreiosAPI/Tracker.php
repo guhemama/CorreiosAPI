@@ -32,6 +32,7 @@
 
 namespace CorreiosAPI;
 
+use Exception;
 use InvalidArgumentException;
 use RuntimeException;
 use GuzzleHttp\Client as HttpClient;
@@ -72,10 +73,9 @@ class Tracker
 
 
   /**
-   * Constructor, sets up user credentials
+   * Sets up user credentials
    * @param  string $username Webservice username
    * @param  string $password Webservice password
-   * @return void
    */
   public function __construct($username, $password)
   {
@@ -90,8 +90,7 @@ class Tracker
    */
   protected function validTrackingNumber($trackingNumber)
   {
-    if (preg_match('/^[\D]{2}[\d]{9}[\D]{2}$/i', $trackingNumber))
-    {
+    if (preg_match('/^[\D]{2}[\d]{9}[\D]{2}$/i', $trackingNumber)) {
       return true;
     }
 
@@ -105,8 +104,7 @@ class Tracker
    */
   public function track($trackingNumber)
   {
-    if (is_array($trackingNumber))
-    {
+    if (is_array($trackingNumber)) {
       return $this->trackMany($trackingNumber);
     }
 
@@ -134,8 +132,7 @@ class Tracker
    */
   protected function trackMany($trackingNumbers)
   {
-    foreach ($trackingNumbers as $trackingNumber)
-    {
+    foreach ($trackingNumbers as $trackingNumber) {
       $this->validTrackingNumber($trackingNumber);
     }
 
@@ -164,18 +161,14 @@ class Tracker
       , 'Objetos'   => $trackingNumbers
     ];
 
-    try
-    {
+    try {
       $httpClient = new HttpClient();
       $response = $httpClient->post(self::WEBSERVICE_URL, ['body' => $params]);
 
-      if ($response->getStatusCode() == 200)
-      {
+      if ($response->getStatusCode() == 200) {
         return $this->processResponse($response->getBody());
       }
-    }
-    catch (Exception $e)
-    {
+    } catch (Exception $e) {
       throw new RuntimeException($e->getMessage);
     }
 
@@ -192,21 +185,17 @@ class Tracker
   {
     $xml = simplexml_load_string($responseBody);
 
-    if ($xml)
-    {
-      if (isset($xml->error))
-      {
+    if ($xml) {
+      if (isset($xml->error)) {
         throw new RuntimeException("API call error: {$xml->error}");
       }
 
       $results = [];
 
-      foreach ($xml->objeto as $package)
-      {
+      foreach ($xml->objeto as $package) {
         $events = [];
 
-        foreach ($package->evento as $event)
-        {
+        foreach ($package->evento as $event) {
           $events[] = [
               'when'    => $event->data . ' ' . $event->hora
             , 'where'   => $event->local . (strlen($event->cidade) ? (' - ' . $event->cidade . '/' . $event->uf) : '')
