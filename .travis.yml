@@ -7,7 +7,7 @@ install:
     - composer install --dev --no-interaction --prefer-source
 
 script:
-    - vendor/bin/phpunit -c phpunit.xml.dist --colors --coverage-clover=build/logs/clover.xml tests/unit
+    - vendor/bin/phpunit -c phpunit.xml --colors --coverage-clover=build/logs/clover.xml
 
 after_script:
     - wget https://scrutinizer-ci.com/ocular.phar
