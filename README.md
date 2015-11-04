@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/guhemama/CorreiosAPI.svg?branch=master)](https://travis-ci.org/guhemama/CorreiosAPI)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/guhemama/CorreiosAPI/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/guhemama/CorreiosAPI/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/guhemama/CorreiosAPI/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/guhemama/CorreiosAPI/?branch=master)
-[![Made With Love](https://img.shields.io/badge/made%20with-❤-red.svg)]
+![Made With Love](https://img.shields.io/badge/made%20with-❤-red.svg)
 
 # License
 
