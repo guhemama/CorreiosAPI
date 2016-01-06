@@ -25,7 +25,6 @@ You'll need valid credentials to use the Correios webservices. If you do not hav
 these credentials, you can use a service such as [CorreiosTracker](https://correios.website).
 
 ``` php
-
 use CorreiosAPI\Tracker;
 
 $tracker = new Tracker('username', 'password');
