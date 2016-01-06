@@ -1,8 +1,96 @@
-# CorreiosAPI - Wrapper for Correios webservices (Brazilian Postal Service)
+# CorreiosAPI - Wrapper for Correios' webservices (Brazilian Postal Service)
 [![Build Status](https://travis-ci.org/guhemama/CorreiosAPI.svg?branch=master)](https://travis-ci.org/guhemama/CorreiosAPI)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/guhemama/CorreiosAPI/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/guhemama/CorreiosAPI/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/guhemama/CorreiosAPI/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/guhemama/CorreiosAPI/?branch=master)
 ![Made With Love](https://img.shields.io/badge/made%20with-❤-red.svg)
+
+CorreiosAPI is a small wrapper that let's you query the Correios tracking webservices without
+having to know its intricacies (and having to touch XML! ;).
+
+
+## Requirements
+* PHP >= 5.6
+* curl
+
+
+# Install
+Install it with Composer:
+
+``` sh
+composer require guhemama/correios_api
+```
+
+# Usage
+You'll need valid credentials to use the Correios webservices. If you do not have
+these credentials, you can use a service such as [CorreiosTracker](https://correios.website).
+
+``` php
+
+use CorreiosAPI\Tracker;
+
+$tracker = new Tracker('username', 'password');
+
+try {
+  $response = $tracker->track('DU030746105BR');
+} catch (\InvalidArgumentException $e) {
+  // An invalid tracking number will throw an exception
+} catch (\RuntimeException $e) {
+  // A HTTP error or XML parsing error will throw an exception
+}
+
+print_r($response);
+/*
+Array
+(
+  [DU030746105BR] => Array
+  (
+    [0] => Array
+    (
+        [when] => 10/12/2015 16:12
+        [where] => CDD REBOUCAS - Curitiba/PR
+        [action] => Entregue
+        [details] => Objeto entregue ao destinatário
+    )
+    [1] => Array
+    (
+        [when] => 10/12/2015 10:10
+        [where] => CDD REBOUCAS - Curitiba/PR
+        [action] => Saiu para entrega
+        [details] => Objeto saiu para entrega ao destinatário
+    )
+    [2] => Array
+        (
+            [when] => 10/12/2015 08:30
+            [where] => CTE CURITIBA - Curitiba/PR
+            [action] => Encaminhado
+            [details] => Objeto encaminhado
+        )
+    [3] => Array
+    (
+        [when] => 08/12/2015 21:30
+        [where] => CTE BELO HORIZONTE - BELO HORIZONTE/MG
+        [action] => Encaminhado
+        [details] => Objeto encaminhado
+    )
+    [4] => Array
+    (
+        [when] => 07/12/2015 17:14
+        [where] => AC SHOPPING DIVINOPOLIS - Divinopolis/MG
+        [action] => Encaminhado
+        [details] => Objeto encaminhado
+    )
+    [5] => Array
+    (
+        [when] => 07/12/2015 13:57
+        [where] => AC SHOPPING DIVINOPOLIS - Divinopolis/MG
+        [action] => Postado
+        [details] => Objeto postado
+    )
+  )
+)
+ */
+```
+
 
 # License
 
