@@ -42,7 +42,7 @@ class Tracker
   /**
    * Webservice endpoint
    */
-  const WEBSERVICE_URL = 'http://websro.correios.com.br/sro_bin/sroii_xml.eventos';
+  const WEBSERVICE_URL = 'https://webservice.correios.com.br/service/rastro/Rastro.wsdl';
 
   /**
    * Fetches a single package
@@ -105,44 +105,14 @@ class Tracker
   public function track($trackingNumber)
   {
     if (is_array($trackingNumber)) {
-      return $this->trackMany($trackingNumber);
+      throw new \RuntimeException('Only a single tracking number can be processed at a time.');
     }
 
-    return $this->trackOne($trackingNumber);
-  }
-
-  /**
-   * Tracks a single package
-   * @param  string $trackingNumber The tracking number
-   * @return mixed
-   */
-  protected function trackOne($trackingNumber)
-  {
     $trackingNumber = strtoupper($trackingNumber);
 
     $this->validTrackingNumber($trackingNumber);
 
     return $this->queryAPI($trackingNumber, self::FETCH_SINGLE);
-  }
-
-  /**
-   * Tracks many packages at the same time
-   * @param  array $trackingNumbers Array of tracking numbers
-   * @return mixed
-   */
-  protected function trackMany($trackingNumbers)
-  {
-    foreach ($trackingNumbers as $trackingNumber) {
-      $this->validTrackingNumber($trackingNumber);
-    }
-
-    // Sort the tracking numbers - they must be in ascending order
-    sort($trackingNumbers);
-
-    // Uppercase everything
-    $trackingNumbers = array_change_key_case($trackingNumbers, CASE_UPPER);
-
-    return $this->queryAPI(implode('', $trackingNumbers), self::FETCH_INTERVAL);
   }
 
   /**
@@ -154,20 +124,23 @@ class Tracker
   protected function queryAPI($trackingNumbers, $fetchMode)
   {
     $params = [
-        'Usuario'   => $this->username
-      , 'Senha'     => $this->password
-      , 'Tipo'      => $fetchMode
-      , 'Resultado' => self::RESULT_MODE
-      , 'Objetos'   => $trackingNumbers
+        'usuario'   => $this->username
+      , 'senha'     => $this->password
+      , 'tipo'      => $fetchMode
+      , 'resultado' => self::RESULT_MODE
+      , 'objetos'   => $trackingNumbers
+      , 'lingua'    => '101'
     ];
 
     try {
-      $httpClient = new HttpClient();
-      $response = $httpClient->post(self::WEBSERVICE_URL, ['body' => $params]);
+      $client = new \SoapClient(self::WEBSERVICE_URL);
+      $response = $client->buscaEventos($params);
 
-      if ($response->getStatusCode() == 200) {
-        return $this->processResponse($response->getBody());
+      if (!$response || empty($response)) {
+        return false;
       }
+
+      return $this->processResponse($response);
     } catch (Exception $e) {
       throw new RuntimeException($e->getMessage());
     }
@@ -183,34 +156,25 @@ class Tracker
    */
   protected function processResponse($responseBody)
   {
-    $xml = simplexml_load_string($responseBody);
-
-    if ($xml) {
-      if (isset($xml->error)) {
-        throw new RuntimeException("API call error: {$xml->error}");
-      }
-
-      $results = [];
-
-      foreach ($xml->objeto as $package) {
-        $events = [];
-
-        foreach ($package->evento as $event) {
-          $events[] = [
-              'when'    => $event->data . ' ' . $event->hora
-            , 'where'   => $event->local . (strlen($event->cidade) ? (' - ' . $event->cidade . '/' . $event->uf) : '')
-            , 'action'  => Tracker\ResponseCodes::getMessage($event->tipo, $event->status)
-            , 'details' => (string) $event->descricao
-          ];
-        }
-
-        $trackingNumber = (string) $package->numero;
-        $results[$trackingNumber] = $events;
-      }
-
-      return $results;
+    if (isset($responseBody->{'return'}->objeto->erro)) {
+      return false;
     }
 
-    return false;
+    $results = [];
+    $events = [];
+
+    foreach ($responseBody->return->objeto->evento as $event) {
+      $events[] = [
+          'when'    => $event->data . ' ' . $event->hora
+        , 'where'   => $event->local . (strlen($event->cidade) ? (' - ' . $event->cidade . '/' . $event->uf) : '')
+        , 'action'  => Tracker\ResponseCodes::getMessage($event->tipo, $event->status)
+        , 'details' => (string) $event->descricao
+      ];
+    }
+
+    $trackingNumber = (string) $responseBody->{'return'}->objeto->numero;
+    $results[$trackingNumber] = $events;
+
+    return $results;
   }
 }
