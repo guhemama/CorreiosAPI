@@ -134,7 +134,7 @@ class Tracker
 
     try {
       $client = new \SoapClient(self::WEBSERVICE_URL);
-      $response = $client->buscaEventos($params);
+      $response = $client->RastroJson($params);
 
       if (!$response || empty($response)) {
         return false;
@@ -156,23 +156,27 @@ class Tracker
    */
   protected function processResponse($responseBody)
   {
-    if (isset($responseBody->{'return'}->objeto->erro)) {
+    $response = json_decode($responseBody->{'return'});
+
+    if (!$response || !$response->sroxml || $response->sroxml->objeto->erro) {
       return false;
     }
+
+    $response = $response->sroxml;
 
     $results = [];
     $events = [];
 
-    foreach ($responseBody->return->objeto->evento as $event) {
+    foreach ($response->objeto->evento as $event) {
       $events[] = [
           'when'    => $event->data . ' ' . $event->hora
-        , 'where'   => $event->local . (strlen($event->cidade) ? (' - ' . $event->cidade . '/' . $event->uf) : '')
+        , 'where'   => strtoupper($event->unidade->local . (strlen($event->unidade->cidade) ? (' - ' . $event->unidade->cidade . '/' . $event->unidade->uf) : ''))
         , 'action'  => Tracker\ResponseCodes::getMessage($event->tipo, $event->status)
         , 'details' => (string) $event->descricao
       ];
     }
 
-    $trackingNumber = (string) $responseBody->{'return'}->objeto->numero;
+    $trackingNumber = (string) $response->objeto->numero;
     $results[$trackingNumber] = $events;
 
     return $results;
