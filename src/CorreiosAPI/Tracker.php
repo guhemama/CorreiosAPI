@@ -170,7 +170,7 @@ class Tracker
     foreach ($response->objeto->evento as $event) {
       $events[] = [
           'when'    => $event->data . ' ' . $event->hora
-        , 'where'   => strtoupper($event->unidade->local . (strlen($event->unidade->cidade) ? (' - ' . $event->unidade->cidade . '/' . $event->unidade->uf) : ''))
+        , 'where'   => strtoupper($event->local . (strlen($event->cidade) ? (' - ' . $event->cidade . '/' . $event->uf) : ''))
         , 'action'  => Tracker\ResponseCodes::getMessage($event->tipo, $event->status)
         , 'details' => (string) $event->descricao
       ];
