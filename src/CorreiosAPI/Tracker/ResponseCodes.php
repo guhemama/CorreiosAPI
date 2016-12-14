@@ -91,7 +91,7 @@ class ResponseCodes
     , 58 => 'Revisão de tributo concluída - Tributo alterado'
     , 59 => 'Revisão de tributo concluída - Tributo mantido'
     , 66 => 'Área com distribuição sujeita a prazo diferenciado'
-    , 69 => 'Extraviado'
+    , 69 => 'Objeto com atraso na entrega'
     , 'CAR' => 'Conferido'
     , 'CD'  => 'Conferido'
     , 'CMR' => 'Conferido'
