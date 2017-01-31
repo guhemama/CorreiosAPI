@@ -134,7 +134,7 @@ class Tracker
 
     try {
       $client = new \SoapClient(self::WEBSERVICE_URL);
-      $response = $client->RastroJson($params);
+      $response = $client->buscaEventos($params);
 
       if (!$response || empty($response)) {
         return false;
@@ -156,13 +156,11 @@ class Tracker
    */
   protected function processResponse($responseBody)
   {
-    $response = json_decode($responseBody->{'return'});
+    $response = $responseBody->{'return'};
 
-    if (!$response || !$response->sroxml || $response->sroxml->objeto->erro) {
+    if (!$response || $response->objeto->erro) {
       return false;
     }
-
-    $response = $response->sroxml;
 
     $results = [];
     $events = [];
